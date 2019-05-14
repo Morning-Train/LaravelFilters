@@ -48,6 +48,7 @@ class Pagination extends Filter
     public function shows(int $per_page = 10)
     {
         $this->per_page = $per_page;
+        $this->default('$per_page', $this->per_page);
         return $this;
     }
 
@@ -58,6 +59,7 @@ class Pagination extends Filter
     public function startsAt(int $page)
     {
         $this->page = min($page, $this->pages);
+        $this->default('$page', $this->page);
         return $this;
     }
 
@@ -89,6 +91,10 @@ class Pagination extends Filter
 
     public function __construct()
     {
+
+        $this->default('$page', $this->page);
+        $this->default('$per_page', $this->per_page);
+
         $this->when('$per_page', function (Builder $query, $per_page) {
             $this->shows(intval($per_page));
         });
