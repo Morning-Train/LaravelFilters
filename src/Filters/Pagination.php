@@ -132,6 +132,8 @@ class Pagination extends Filter
                 ]
             ];
         }
+
+        return [];
     }
 
     public function apply(Builder $query, Request $request = null)
