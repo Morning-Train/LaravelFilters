@@ -12,8 +12,14 @@ class Filter implements FilterContract
 {
     use StaticCreate;
 
-    const PROVIDE_ALL = 'all';
+    const PROVIDE_ALL     = 'all';
     const PROVIDE_DEFAULT = 'default';
+
+    /**
+     * Provider Types
+     */
+    const DEFAULT_TYPE = 'when';
+    const MISSING      = 'missing';
 
     /**
      * Case providers
@@ -22,13 +28,14 @@ class Filter implements FilterContract
      */
 
     protected $default_values = [];
-    protected $providers = [];
+    protected $providers      = [];
 
     public function when($keys, Closure $closure)
     {
         $this->providers[] = [
-            'keys' => (array)$keys,
-            'apply' => $closure
+            'keys'  => (array)$keys,
+            'apply' => $closure,
+            'type'  => static::DEFAULT_TYPE,
         ];
 
         return $this;
@@ -56,6 +63,17 @@ class Filter implements FilterContract
         return $this->when([], $closure);
     }
 
+    public function missing($keys, Closure $closure)
+    {
+        $this->providers[] = [
+            'keys'  => (array)$keys,
+            'apply' => $closure,
+            'type'  => static::MISSING,
+        ];
+
+        return $this;
+    }
+
     public function getMetadata()
     {
         return [];
@@ -65,10 +83,8 @@ class Filter implements FilterContract
     {
         if (empty($keys)) {
             return [];
-        } else {
-            if (is_null($request)) {
-                return false;
-            }
+        } else if (is_null($request)) {
+            return false;
         }
 
         $args = [];
@@ -95,8 +111,11 @@ class Filter implements FilterContract
         foreach ($this->providers as $provider) {
             $args = $this->getArguments($provider['keys'], $request);
 
-            if (is_array($args)) {
+            if (is_array($args) && $provider['type'] === static::DEFAULT_TYPE) {
                 $provider['apply'] ($query, ...$args);
+            }
+            else if (!is_array($args) && $provider['type'] === static::MISSING) {
+                $provider['apply'] ($query);
             }
         }
     }
