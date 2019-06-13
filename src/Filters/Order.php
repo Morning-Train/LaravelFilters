@@ -120,9 +120,11 @@ class Order extends Filter
                 'order' => $this->appliedOrders
             ];
         }
+
+        return [];
     }
 
-    public function default(string $key, string $value)
+    public function default($key, $value = null)
     {
         $this->default_values['$order'] = [$key => $value];
 
