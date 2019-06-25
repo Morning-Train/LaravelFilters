@@ -101,6 +101,13 @@ class Pagination extends Filter
 
         $this->when('$page', function (Builder $query, $page) {
 
+            $pages = 1;
+            $start_page = $page;
+            if(is_array($page)) {
+                $pages = count($page);
+                $start_page = $page[0];
+            }
+
             // store count
             $this->count = $query->count();
 
@@ -108,13 +115,13 @@ class Pagination extends Filter
             $this->setPages($this->count);
 
             // store page
-            $this->startsAt(intval($page));
+            $this->startsAt(intval($start_page));
 
             // set applied filter
             $this->paginated = true;
 
             // limit
-            $query->limit($this->getLimit());
+            $query->limit($this->getLimit() * $pages);
 
             // offset
             $query->offset($this->getOffset());
