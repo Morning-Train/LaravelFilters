@@ -115,5 +115,14 @@ class Search extends Filter
         }
     }
 
+    /////////////////////////////////
+    /// Exporting
+    /////////////////////////////////
+
+    protected function getExportType()
+    {
+        return 'Search';
+    }
+
 }
 
