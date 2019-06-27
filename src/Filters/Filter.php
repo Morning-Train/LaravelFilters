@@ -12,14 +12,14 @@ class Filter implements FilterContract
 {
     use StaticCreate;
 
-    const PROVIDE_ALL     = 'all';
+    const PROVIDE_ALL = 'all';
     const PROVIDE_DEFAULT = 'default';
 
     /**
      * Provider Types
      */
     const DEFAULT_TYPE = 'when';
-    const MISSING      = 'missing';
+    const MISSING = 'missing';
 
     /**
      * Case providers
@@ -28,14 +28,14 @@ class Filter implements FilterContract
      */
 
     protected $default_values = [];
-    protected $providers      = [];
+    protected $providers = [];
 
     public function when($keys, Closure $closure)
     {
         $this->providers[] = [
-            'keys'  => (array)$keys,
+            'keys' => (array)$keys,
             'apply' => $closure,
-            'type'  => static::DEFAULT_TYPE,
+            'type' => static::DEFAULT_TYPE,
         ];
 
         return $this;
@@ -66,9 +66,9 @@ class Filter implements FilterContract
     public function missing($keys, Closure $closure)
     {
         $this->providers[] = [
-            'keys'  => (array)$keys,
+            'keys' => (array)$keys,
             'apply' => $closure,
-            'type'  => static::MISSING,
+            'type' => static::MISSING,
         ];
 
         return $this;
@@ -113,8 +113,7 @@ class Filter implements FilterContract
 
             if (is_array($args) && $provider['type'] === static::DEFAULT_TYPE) {
                 $provider['apply'] ($query, ...$args);
-            }
-            else if (!is_array($args) && $provider['type'] === static::MISSING) {
+            } else if (!is_array($args) && $provider['type'] === static::MISSING) {
                 $provider['apply'] ($query);
             }
         }
@@ -152,5 +151,70 @@ class Filter implements FilterContract
         return $default;
     }
 
+    /////////////////////////////////
+    /// Exporting getters
+    /////////////////////////////////
+
+    protected $label = null;
+    protected $placeholder = null;
+
+    public function getLabel()
+    {
+        return $this->label;
+    }
+
+    public function getPlaceholder()
+    {
+        return $this->placeholder;
+    }
+
+    public function label($value = null)
+    {
+        $this->label = $value;
+
+        return $this;
+    }
+
+    public function placeholder($value = null)
+    {
+        $this->placeholder = $value;
+
+        return $this;
+    }
+
+    /////////////////////////////////
+    /// Exporting
+    /////////////////////////////////
+
+    protected function getExportType()
+    {
+        return null;
+    }
+
+    protected function extraExport()
+    {
+        return [];
+    }
+
+    public function export()
+    {
+
+        $export = [];
+
+        $keys = $this->getAllKeys();
+        if (!empty($keys)) {
+            foreach ($keys as $key) {
+                $export[$key] = array_merge([
+                    "key" => $key,
+                    "value" => $this->getDefaultValue($key),
+                    "label" => $this->getLabel(),
+                    "placeholder" => $this->getPlaceholder(),
+                    "type" => $this->getExportType(),
+                ], $this->extraExport());
+            }
+        }
+
+        return $export;
+    }
 
 }
