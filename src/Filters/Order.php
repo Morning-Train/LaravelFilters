@@ -50,7 +50,6 @@ class Order extends Filter
             return [
                 [
                     'scope' => $input,
-                    'direction' => 'asc'
                 ]
             ];
         }
@@ -102,7 +101,10 @@ class Order extends Filter
                 $this->appliedOrders = $orders;
                 foreach ($orders as $order) {
                     if(isset($order['scope'])){
-                        $query->{$order['scope']}($order['direction']);
+                        isset($order['direction']) ?
+                            $query->{$order['scope']}($order['direction']) :
+                            $query->{$order['scope']}();
+
                     } else if(isset($order['column'])){
                         $query->orderBy($order['column'], $order['direction']);
                     }
