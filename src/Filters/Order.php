@@ -128,7 +128,9 @@ class Order extends Filter
 
     public function default($key, $value = null)
     {
-        $this->default_values['$order'] = [$key => $value];
+        is_null($value) ?
+            $this->default_values['$order'] = $key :
+            $this->default_values['$order'] = [$key => $value];
 
         return $this;
     }
