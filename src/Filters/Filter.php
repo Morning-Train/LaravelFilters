@@ -90,7 +90,10 @@ class Filter implements FilterContract
         $args = [];
         foreach ($keys as $key) {
             if (!$request->has($key)) {
-                if (isset($this->default_values[$key])) {
+
+                if($this->getPlaceholder() !== null && $this->when_placeholder !== null) {
+                    $args[] = $this->when_placeholder; /// TODO: Make it possible to apply a callback to when_placeholder to run custom scopes
+                } else if (isset($this->default_values[$key])) {
                     $args[] = $this->default_values[$key];
                 }
 
@@ -157,6 +160,7 @@ class Filter implements FilterContract
 
     protected $label = null;
     protected $placeholder = null;
+    protected $when_placeholder = null;
 
     public function getLabel()
     {
@@ -175,9 +179,10 @@ class Filter implements FilterContract
         return $this;
     }
 
-    public function placeholder($value = null)
+    public function placeholder($value = null, $when_placeholder = null)
     {
         $this->placeholder = $value;
+        $this->when_placeholder = $when_placeholder;
 
         return $this;
     }
