@@ -5,6 +5,7 @@ namespace MorningTrain\Laravel\Filters\Filters;
 use Closure;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use MorningTrain\Laravel\Filters\Contracts\FilterContract;
 use MorningTrain\Laravel\Support\Traits\StaticCreate;
 
@@ -30,11 +31,11 @@ class Filter implements FilterContract
     protected $default_values = [];
     protected $providers = [];
 
-    public function when($keys, Closure $closure)
+    public function when($keys, Closure $closure = null)
     {
         $this->providers[] = [
             'keys' => (array)$keys,
-            'apply' => $closure,
+            'apply' => $this->getFilterMethod($closure),
             'type' => static::DEFAULT_TYPE,
         ];
 
@@ -49,7 +50,7 @@ class Filter implements FilterContract
             foreach ($this->providers as $provider) {
                 $provider_keys = $provider['keys'];
                 if (is_array($provider_keys)) {
-                    $provider_keys = array_flatten($provider_keys);
+                    $provider_keys = Arr::flatten($provider_keys);
                 }
                 $keys = array_merge($keys, $provider_keys);
             }
@@ -58,20 +59,48 @@ class Filter implements FilterContract
         return $keys;
     }
 
-    public function always(Closure $closure)
+    public function always(Closure $closure = null)
     {
         return $this->when([], $closure);
     }
 
-    public function missing($keys, Closure $closure)
+    public function missing($keys, Closure $closure = null)
     {
         $this->providers[] = [
             'keys' => (array)$keys,
-            'apply' => $closure,
+            'apply' => $this->getFilterMethod($closure),
             'type' => static::MISSING,
         ];
 
         return $this;
+    }
+
+    protected $scope;
+
+    /**
+     * @param string $name
+     * @return $this
+     */
+    public function scope(string $name)
+    {
+        $this->scope = $name;
+
+        return $this;
+    }
+
+    protected function getFilterMethod(Closure $closure = null)
+    {
+        return function (Builder $query, ...$args) use ($closure) {
+            if (isset($this->scope)) {
+                return $query->{$this->scope}(...$args);
+            }
+
+            if ($closure !== null) {
+                return $closure($query, ...$args);
+            }
+
+            throw new \Exception('No execution method provided for Filter');
+        };
     }
 
     public function getMetadata()
