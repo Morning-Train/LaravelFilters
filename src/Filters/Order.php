@@ -45,7 +45,6 @@ class Order extends Filter
     {
 
         // Scope
-
         if (is_string($input) && $this->validateScope($input)) {
             return [
                 [
@@ -62,6 +61,10 @@ class Order extends Filter
                     'direction' => 'asc'
                 ]
             ];
+        }
+
+        if(is_object($input)) {
+            $input = (array) $input;
         }
 
         // Multiple columns
@@ -95,6 +98,12 @@ class Order extends Filter
     public function __construct()
     {
         $this->when('$order', function ($query, $input) {
+
+            $parsedInput = json_decode($input);
+            if($parsedInput) {
+                $input = $parsedInput;
+            }
+
             $orders = $this->getOrdersFromQueryInput($input);
 
             if (is_array($orders)) {
