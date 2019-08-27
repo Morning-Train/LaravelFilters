@@ -122,7 +122,7 @@ class Filter implements FilterContract
 
                 if($this->getPlaceholder() !== null && $this->when_placeholder !== null) {
                     $args[] = $this->when_placeholder; /// TODO: Make it possible to apply a callback to when_placeholder to run custom scopes
-                } else if (isset($this->default_values[$key])) {
+                } else if (array_key_exists($key, $this->default_values)) {
                     $args[] = $this->default_values[$key];
                 }
 
@@ -176,7 +176,7 @@ class Filter implements FilterContract
     public function getDefaultValue($key, $default = null)
     {
 
-        if (isset($this->default_values[$key])) {
+        if (array_key_exists($key, $this->default_values)) {
             return $this->default_values[$key];
         }
 
