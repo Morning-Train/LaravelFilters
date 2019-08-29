@@ -34,7 +34,7 @@ class Filter implements FilterContract
 
     public function __construct($key = null)
     {
-        if($key !== null) {
+        if ($key !== null) {
             $this->when($key);
         }
     }
@@ -171,22 +171,23 @@ class Filter implements FilterContract
 
         if (is_array($keys) && !empty($keys)) {
             foreach ($keys as $key) {
-                 $this->missing($key, function() {
-                     abort(404);
-                 });
+                $this->missing($key, function () {
+                    abort(404);
+                });
             }
         }
 
         return $this;
     }
 
-    public function defaultValue($value = null) {
+    public function defaultValue($value = null)
+    {
 
         $keys = $this->getAllKeys();
 
         if (is_array($keys) && !empty($keys)) {
             foreach ($keys as $key) {
-                $this->default($key,  $value);
+                $this->default($key, $value);
             }
         }
 
