@@ -8,6 +8,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use MorningTrain\Laravel\Filters\Contracts\FilterContract;
 use MorningTrain\Laravel\Support\Traits\StaticCreate;
+use Illuminate\Support\Str;
 
 class Filter implements FilterContract
 {
@@ -106,9 +107,9 @@ class Filter implements FilterContract
                 return $closure($query, ...$args);
             }
 
-            if(is_array($keys) && !empty($keys)) {
-                foreach($keys as $key) {
-                    $query->{"where".ucfirst($key)}(...$args);
+            if (is_array($keys) && !empty($keys)) {
+                foreach ($keys as $key) {
+                    $query->{"where" . Str::camel($key)}(...$args);
                 }
             }
 
