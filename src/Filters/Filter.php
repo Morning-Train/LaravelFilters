@@ -96,7 +96,7 @@ class Filter implements FilterContract
 
             if (is_array($keys) && !empty($keys)) {
                 foreach ($keys as $key) {
-                    $query->{"where" . Str::camel($key)}(...$args);
+                    $query->where($key, $this->getKeyOperator($key), ...$args);
                 }
             }
 
@@ -161,6 +161,34 @@ class Filter implements FilterContract
                 $this->missing($key, function () {
                     abort(404);
                 });
+            }
+        }
+
+        return $this;
+    }
+
+    /////////////////////////////////
+    /// Operators
+    /////////////////////////////////
+
+    protected $operators = [];
+
+    protected function getKeyOperator($key) {
+
+        if(isset($this->operators[$key])) {
+            return $this->operators[$key];
+        }
+
+        return '=';
+    }
+
+    public function operator($operator, $key = null) {
+
+        $keys = ($key !== null)?[$key]:$this->getAllKeys();
+
+        if(is_array($keys) && !empty($keys)) {
+            foreach($keys as $key) {
+                $this->operators[$key] = $operator;
             }
         }
 
