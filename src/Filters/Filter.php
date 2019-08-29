@@ -179,6 +179,19 @@ class Filter implements FilterContract
         return $this;
     }
 
+    public function defaultValue($value = null) {
+
+        $keys = $this->getAllKeys();
+
+        if (is_array($keys) && !empty($keys)) {
+            foreach ($keys as $key) {
+                $this->default($key,  $value);
+            }
+        }
+
+        return $this;
+    }
+
     public function default($key, $value = null)
     {
         $this->default_values[$key] = $value;
