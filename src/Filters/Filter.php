@@ -83,19 +83,6 @@ class Filter implements FilterContract
         return $this;
     }
 
-    protected $scope;
-
-    /**
-     * @param string $name
-     * @return $this
-     */
-    public function scope(string $name)
-    {
-        $this->scope = $name;
-
-        return $this;
-    }
-
     protected function getFilterMethod(Closure $closure = null)
     {
         return function ($keys, Builder $query, ...$args) use ($closure) {
@@ -179,6 +166,27 @@ class Filter implements FilterContract
 
         return $this;
     }
+
+    /////////////////////////////////
+    /// Scopes
+    /////////////////////////////////
+
+    protected $scope;
+
+    /**
+     * @param string $name
+     * @return $this
+     */
+    public function scope(string $name)
+    {
+        $this->scope = $name;
+
+        return $this;
+    }
+
+    /////////////////////////////////
+    /// Defaults
+    /////////////////////////////////
 
     public function defaultValue($value = null)
     {
