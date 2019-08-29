@@ -97,7 +97,7 @@ class Filter implements FilterContract
 
     protected function getFilterMethod(Closure $closure = null)
     {
-        return function (Builder $query, ...$args) use ($closure) {
+        return function ($keys, Builder $query, ...$args) use ($closure) {
             if (isset($this->scope)) {
                 return $query->{$this->scope}(...$args);
             }
@@ -106,7 +106,13 @@ class Filter implements FilterContract
                 return $closure($query, ...$args);
             }
 
-            throw new \Exception('No execution method provided for Filter');
+            if(is_array($keys) && !empty($keys)) {
+                foreach($keys as $key) {
+                    $query->{"where".ucfirst($key)}(...$args);
+                }
+            }
+
+            return $query;
         };
     }
 
@@ -127,7 +133,7 @@ class Filter implements FilterContract
         foreach ($keys as $key) {
             if (!$request->has($key)) {
 
-                if($this->getPlaceholder() !== null && $this->when_placeholder !== null) {
+                if ($this->getPlaceholder() !== null && $this->when_placeholder !== null) {
                     $args[] = $this->when_placeholder; /// TODO: Make it possible to apply a callback to when_placeholder to run custom scopes
                 } else if (array_key_exists($key, $this->default_values)) {
                     $args[] = $this->default_values[$key];
@@ -151,11 +157,26 @@ class Filter implements FilterContract
             $args = $this->getArguments($provider['keys'], $request);
 
             if (is_array($args) && $provider['type'] === static::DEFAULT_TYPE) {
-                $provider['apply'] ($query, ...$args);
+                $provider['apply'] ($provider['keys'], $query, ...$args);
             } else if (!is_array($args) && $provider['type'] === static::MISSING) {
-                $provider['apply'] ($query);
+                $provider['apply'] ($provider['keys'], $query);
             }
         }
+    }
+
+    public function required()
+    {
+        $keys = $this->getAllKeys();
+
+        if (is_array($keys) && !empty($keys)) {
+            foreach ($keys as $key) {
+                 $this->missing($key, function() {
+                     abort(404);
+                 });
+            }
+        }
+
+        return $this;
     }
 
     public function default($key, $value = null)

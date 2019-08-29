@@ -156,7 +156,7 @@ class Pagination extends Filter
             $args = $this->getArguments($provider['keys'], $request);
 
             if (is_array($args)) {
-                $provider['apply'] ($query, ...$args);
+                $provider['apply'] ($provider['keys'], $query, ...$args);
             }
         }
     }
