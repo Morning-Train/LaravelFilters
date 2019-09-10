@@ -125,6 +125,13 @@ class Order extends Filter
         });
     }
 
+    protected function extraExport()
+    {
+        return [
+            'sortables' => array_merge($this->scopes, $this->columns)
+        ];
+    }
+
     protected $appliedOrders;
 
     public function getMetadata()
@@ -139,3 +146,4 @@ class Order extends Filter
     }
 
 }
+
