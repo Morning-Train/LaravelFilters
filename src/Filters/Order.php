@@ -99,9 +99,12 @@ class Order extends Filter
     {
         $this->when('$order', function ($query, $input) {
 
-            $parsedInput = json_decode($input);
-            if($parsedInput) {
-                $input = $parsedInput;
+            if (is_string($input)) {
+                $parsedInput = json_decode($input);
+
+                if($parsedInput) {
+                    $input = $parsedInput;
+                }
             }
 
             $orders = $this->getOrdersFromQueryInput($input);
@@ -133,15 +136,6 @@ class Order extends Filter
         }
 
         return [];
-    }
-
-    public function default($key, $value = null)
-    {
-        is_null($value) ?
-            $this->default_values['$order'] = $key :
-            $this->default_values['$order'] = [$key => $value];
-
-        return $this;
     }
 
 }
