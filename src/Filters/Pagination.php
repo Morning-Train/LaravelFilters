@@ -101,6 +101,10 @@ class Pagination extends Filter
 
         $this->when('$page', function (Builder $query, $page) {
 
+            if ($this->getLimit() === 0) {
+                return $query;
+            }
+
             $pages = 1;
             $start_page = $page;
             if(is_array($page)) {
