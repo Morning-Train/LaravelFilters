@@ -5,9 +5,8 @@ namespace MorningTrain\Laravel\Filters\Filters;
 use Illuminate\Database\Eloquent\Builder;
 
 /**
- * Class ScopeFilter
+ * Class RelationshipFilter
  * @package MorningTrain\Laravel\Filters\Filters
- * @deprecated the base Filter now supports the use of scope()
  */
 class RelationshipFilter extends SelectFilter
 {
