@@ -2,6 +2,7 @@
 
 namespace MorningTrain\Laravel\Filters\Filters;
 
+use Closure;
 use Illuminate\Database\Eloquent\Model;
 
 class SelectFilter extends Filter
@@ -32,39 +33,50 @@ class SelectFilter extends Filter
         $q->whereIn($constraint, $values);
     }
 
-    public function options(array $options)
+    public function options($options)
     {
-        $this->select_options = $options;
+        if (is_array($options) || $options instanceof Closure) {
+            $this->select_options = $options;
+        }
 
         return $this;
+    }
+
+    public function getOptions(): array
+    {
+        return ($this->select_options instanceof Closure) ?
+            ($this->select_options)() :
+            $this->select_options;
     }
 
     public function source($source, $title = null, $key = 'id') {
 
         if($source instanceof \Illuminate\Database\Eloquent\Builder || $source instanceof \Illuminate\Database\Query\Builder) {
 
-            $options = $source->get()->pluck($title, $key);
+            $this->options(function () use ($source, $title, $key) {
+                $options = $source->get()->pluck($title, $key);
 
-            $options->transform(function($item) {
-                
-                if($item instanceof Model) {
-                    foreach($item->getAttributes() as $attribute) {
-                        if(is_string($attribute)) {
-                            return $attribute;
-                        }
-                    }
-                    foreach($item->getAttributes() as $attribute) {
-                        if(is_numeric($attribute)) {
-                            return $attribute;
-                        }
-                    }
-                    return $attribute;
-                }
+                $options->transform(function($item) {
 
-                return $item;
+                    if($item instanceof Model) {
+                        foreach($item->getAttributes() as $attribute) {
+                            if(is_string($attribute)) {
+                                return $attribute;
+                            }
+                        }
+                        foreach($item->getAttributes() as $attribute) {
+                            if(is_numeric($attribute)) {
+                                return $attribute;
+                            }
+                        }
+                        return $attribute;
+                    }
+
+                    return $item;
+                });
+
+                return $options->toArray();
             });
-
-            $this->options($options->toArray());
         }
 
         return $this;
@@ -81,7 +93,7 @@ class SelectFilter extends Filter
 
     protected function extraExport()
     {
-        return ['options' => $this->select_options];
+        return ['options' => $this->getOptions()];
     }
 
 }
