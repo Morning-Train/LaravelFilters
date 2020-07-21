@@ -139,18 +139,20 @@ class Pagination extends Filter
 
     public function getMetadata()
     {
+        $base_export = $this->export();
+
         if ($this->paginated()) {
-            return [
+            return $base_export = array_merge($base_export, [
                 'pagination' => [
                     'page' => $this->page,
                     'per_page' => $this->per_page,
                     'pages' => $this->pages,
                     'count' => $this->count
                 ]
-            ];
+            ]);
         }
 
-        return [];
+        return $base_export;
     }
 
     public function apply(Builder $query, Request $request = null)
