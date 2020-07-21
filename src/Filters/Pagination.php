@@ -137,16 +137,16 @@ class Pagination extends Filter
         return $this->paginated;
     }
 
-    protected function extraExport()
+    public function export()
     {
-        return [
+        return array_merge(parent::export(), [
             'pagination' => [
                 'page' => $this->page,
                 'per_page' => $this->per_page,
                 'pages' => $this->pages,
                 'count' => $this->count
             ],
-        ];
+        ]);
     }
 
     public function getMetadata()
