@@ -137,22 +137,21 @@ class Pagination extends Filter
         return $this->paginated;
     }
 
+    protected function extraExport()
+    {
+        return [
+            'pagination' => [
+                'page' => $this->page,
+                'per_page' => $this->per_page,
+                'pages' => $this->pages,
+                'count' => $this->count
+            ],
+        ];
+    }
+
     public function getMetadata()
     {
-        $base_export = $this->export();
-
-        if ($this->paginated()) {
-            return $base_export = array_merge($base_export, [
-                'pagination' => [
-                    'page' => $this->page,
-                    'per_page' => $this->per_page,
-                    'pages' => $this->pages,
-                    'count' => $this->count
-                ]
-            ]);
-        }
-
-        return $base_export;
+        return $this->export();
     }
 
     public function apply(Builder $query, Request $request = null)
