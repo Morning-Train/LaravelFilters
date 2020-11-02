@@ -10,10 +10,7 @@ class PeriodFilter extends Filter
     public function __construct($key, $scope)
     {
 
-        $this->scope($scope);
-
-        $this->when($key, function ($q, $value) {
-
+        $this->when($key, function ($q, $value) use($scope) {
 
             $from = data_get($value, 'from');
             $to = data_get($value, 'to');
@@ -30,10 +27,14 @@ class PeriodFilter extends Filter
                     }
                 }
 
-                $q->{$this->scope}($from, $to);
+                $q->{$scope}($from, $to);
             }
 
         });
+
+        $this->default('from', Carbon::today()->format($this->input_format));
+        $this->default('to', Carbon::today()->format($this->input_format));
+
     }
 
     /////////////////////////////////
