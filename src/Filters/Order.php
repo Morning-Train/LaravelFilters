@@ -97,7 +97,7 @@ class Order extends Filter
 
     public function __construct()
     {
-        $this->when('$order', function ($query, $input) {
+        $this->when('sort', function ($query, $input) {
 
             if (is_string($input)) {
                 $parsedInput = json_decode($input);
