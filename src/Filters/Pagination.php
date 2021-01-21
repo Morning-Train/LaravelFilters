@@ -8,6 +8,8 @@ use Illuminate\Http\Request;
 class Pagination extends Filter
 {
 
+    const REQUIRED = true;
+
     /**
      * Limit number of entries (per page)
      *

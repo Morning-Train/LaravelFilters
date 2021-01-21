@@ -14,6 +14,8 @@ class Filter implements FilterContract
 {
     use StaticCreate;
 
+    const REQUIRED = false;
+
     const PROVIDE_ALL = 'all';
     const PROVIDE_DEFAULT = 'default';
 
@@ -323,6 +325,7 @@ class Filter implements FilterContract
                     "label" => $this->getLabel(),
                     "placeholder" => $this->getPlaceholder(),
                     "type" => $this->getExportType(),
+                    "required" => static::REQUIRED,
                 ], $this->extraExport());
             }
         }
