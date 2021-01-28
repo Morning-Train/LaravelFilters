@@ -31,6 +31,7 @@ class Filter implements FilterContract
      * @var array
      */
 
+    protected $export_only_defaults = [];
     protected $default_values = [];
     protected $providers = [];
 
@@ -125,7 +126,7 @@ class Filter implements FilterContract
 
                 if ($this->getPlaceholder() !== null && $this->when_placeholder !== null) {
                     $args[] = $this->when_placeholder; /// TODO: Make it possible to apply a callback to when_placeholder to run custom scopes
-                } else if (array_key_exists($key, $this->default_values)) {
+                } else if (array_key_exists($key, $this->default_values) && !in_array($key, $this->export_only_defaults)) {
                     $args[] = $this->default_values[$key];
                 }
 
@@ -218,7 +219,7 @@ class Filter implements FilterContract
     /// Defaults
     /////////////////////////////////
 
-    public function defaultValue($value = null)
+    public function defaultValue($value = null, $export_only = false)
     {
 
         $keys = $this->getAllKeys();
@@ -226,6 +227,9 @@ class Filter implements FilterContract
         if (is_array($keys) && !empty($keys)) {
             foreach ($keys as $key) {
                 $this->default($key, $value);
+                if($export_only === true) {
+                    $this->export_only_defaults[] = $key;
+                }
             }
         }
 
@@ -320,13 +324,13 @@ class Filter implements FilterContract
         if (!empty($keys)) {
             foreach ($keys as $key) {
                 $export[$key] = array_merge([
-                    "key" => $key,
-                    "value" => $this->getDefaultValue($key),
-                    "label" => $this->getLabel(),
-                    "placeholder" => $this->getPlaceholder(),
-                    "type" => $this->getExportType(),
-                    "required" => static::REQUIRED,
-                ], $this->extraExport());
+                                                "key" => $key,
+                                                "value" => $this->getDefaultValue($key),
+                                                "label" => $this->getLabel(),
+                                                "placeholder" => $this->getPlaceholder(),
+                                                "type" => $this->getExportType(),
+                                                "required" => static::REQUIRED,
+                                            ], $this->extraExport());
             }
         }
 
