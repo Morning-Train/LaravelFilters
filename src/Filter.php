@@ -4,6 +4,7 @@ namespace MorningTrain\Laravel\Filters;
 
 use MorningTrain\Laravel\Filters\Filters\Filter as BaseFilter;
 use MorningTrain\Laravel\Filters\Filters\AlwaysFilter;
+use MorningTrain\Laravel\Filters\Filters\Pagination;
 use MorningTrain\Laravel\Filters\Filters\WithFilter;
 
 class Filter
@@ -36,6 +37,14 @@ class Filter
     public static function with($relations, $callback = null)
     {
         return new WithFilter($relations, $callback);
+    }
+
+    /**
+     * @return Pagination
+     */
+    public static function paginate()
+    {
+        return new Pagination();
     }
 
 }
