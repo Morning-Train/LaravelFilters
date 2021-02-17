@@ -2,6 +2,7 @@
 
 namespace MorningTrain\Laravel\Filters;
 
+use MorningTrain\Laravel\Filters\Filters\EnumFilter;
 use MorningTrain\Laravel\Filters\Filters\Filter as BaseFilter;
 use MorningTrain\Laravel\Filters\Filters\AlwaysFilter;
 use MorningTrain\Laravel\Filters\Filters\Pagination;
@@ -37,6 +38,16 @@ class Filter
     public static function with($relations, $callback = null)
     {
         return new WithFilter($relations, $callback);
+    }
+
+    /**
+     * @param $enum
+     * @param $constraint
+     * @return EnumFilter
+     */
+    public static function enum($enum, $constraint)
+    {
+        return new EnumFilter($enum, $constraint);
     }
 
     /**
