@@ -11,6 +11,8 @@ use MorningTrain\Laravel\Filters\Filters\WithFilter;
 class Filter
 {
 
+    use Illuminate\Support\Traits\Macroable;
+
     /**
      * @param string $name
      * @param \Closure $closure
