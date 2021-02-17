@@ -22,6 +22,16 @@ class Filter
     }
 
     /**
+     * @param string $name
+     * @param \Closure $closure
+     * @return BaseFilter
+     */
+    public static function by($name = null, \Closure $closure = null)
+    {
+        return new BaseFilter($name, $closure);
+    }
+
+    /**
      * @param \Closure $closure
      * @return BaseFilter
      */
