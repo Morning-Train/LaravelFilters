@@ -35,10 +35,10 @@ class Filter implements FilterContract
     protected $default_values = [];
     protected $providers = [];
 
-    public function __construct($key = null)
+    public function __construct($key = null, Closure $closure = null)
     {
         if ($key !== null) {
-            $this->when($key);
+            $this->when($key, $closure);
         }
     }
 
