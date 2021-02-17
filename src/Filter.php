@@ -14,7 +14,7 @@ class Filter
      * @param \Closure $closure
      * @return BaseFilter
      */
-    public static function create($name, \Closure $closure = null)
+    public static function create($name = null, \Closure $closure = null)
     {
         return new BaseFilter($name, $closure);
     }
