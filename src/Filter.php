@@ -7,11 +7,12 @@ use MorningTrain\Laravel\Filters\Filters\Filter as BaseFilter;
 use MorningTrain\Laravel\Filters\Filters\AlwaysFilter;
 use MorningTrain\Laravel\Filters\Filters\Pagination;
 use MorningTrain\Laravel\Filters\Filters\WithFilter;
+use Illuminate\Support\Traits\Macroable;
 
 class Filter
 {
 
-    use Illuminate\Support\Traits\Macroable;
+    use Macroable;
 
     /**
      * @param string $name
