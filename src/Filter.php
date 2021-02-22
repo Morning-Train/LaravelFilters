@@ -6,6 +6,7 @@ use MorningTrain\Laravel\Filters\Filters\EnumFilter;
 use MorningTrain\Laravel\Filters\Filters\Filter as BaseFilter;
 use MorningTrain\Laravel\Filters\Filters\AlwaysFilter;
 use MorningTrain\Laravel\Filters\Filters\Pagination;
+use MorningTrain\Laravel\Filters\Filters\Search;
 use MorningTrain\Laravel\Filters\Filters\WithFilter;
 use Illuminate\Support\Traits\Macroable;
 
@@ -69,6 +70,22 @@ class Filter
     public static function paginate()
     {
         return new Pagination();
+    }
+
+    /**
+     * @param array|null|mixed $keys
+     * @param string $pattern
+     * @return Search
+     */
+    public static function search($keys = null, $pattern = '%%s%')
+    {
+        $field  = new Search();
+
+        if($keys !== null) {
+            $field->search($keys, $pattern);
+        }
+
+        return $field;
     }
 
 }
