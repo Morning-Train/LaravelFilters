@@ -8,6 +8,7 @@ use MorningTrain\Laravel\Filters\Filters\AlwaysFilter;
 use MorningTrain\Laravel\Filters\Filters\Order;
 use MorningTrain\Laravel\Filters\Filters\Pagination;
 use MorningTrain\Laravel\Filters\Filters\Search;
+use MorningTrain\Laravel\Filters\Filters\VoidFilter;
 use MorningTrain\Laravel\Filters\Filters\WithFilter;
 use Illuminate\Support\Traits\Macroable;
 
@@ -95,6 +96,15 @@ class Filter
         }
 
         return $field;
+    }
+
+    /**
+     * @param $name
+     * @return VoidFilter
+     */
+    public static function void($name)
+    {
+        return new VoidFilter($name);
     }
 
 }
