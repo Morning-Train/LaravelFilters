@@ -136,13 +136,23 @@ class Order extends Filter
 
     public function getMetadata()
     {
+        $meta = [];
+
         if (is_array($this->appliedOrders)) {
-            return [
-                'order' => $this->appliedOrders
-            ];
+            $meta = array_merge([
+                                    'order' => $this->appliedOrders,
+                                ], $this->export());
+
+            $applied = collect($this->appliedOrders);
+
+            if ($applied->isNotEmpty()) {
+                foreach ($applied as $item) {
+                    data_set($meta, 'sort.' . $item['column'], $item['direction']);
+                }
+            }
         }
 
-        return [];
+        return $meta;
     }
 
 }
