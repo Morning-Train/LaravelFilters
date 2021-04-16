@@ -147,7 +147,11 @@ class Order extends Filter
 
             if ($applied->isNotEmpty()) {
                 foreach ($applied as $item) {
-                    data_set($meta, 'sort.' . $item['column'], $item['direction']);
+                    if(isset($item['column'])) {
+                        data_set($meta, 'sort.' . $item['column'], $item['direction']);
+                    } elseif(isset($item['scope'])) {
+                        data_set($meta, 'sort.' . $item['scope'], $item['direction']);
+                    }
                 }
             }
         }
