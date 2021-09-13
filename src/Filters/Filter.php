@@ -260,12 +260,13 @@ class Filter implements FilterContract
 
     public function getDefaultValue($key, $default = null)
     {
+        $value = $default;
 
         if (array_key_exists($key, $this->default_values)) {
-            return $this->default_values[$key];
+            $value = $this->default_values[$key];
         }
 
-        return $default;
+        return value($value);
     }
 
     /////////////////////////////////
