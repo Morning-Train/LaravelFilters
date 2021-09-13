@@ -127,7 +127,7 @@ class Filter implements FilterContract
                 if ($this->getPlaceholder() !== null && $this->when_placeholder !== null) {
                     $args[] = $this->when_placeholder; /// TODO: Make it possible to apply a callback to when_placeholder to run custom scopes
                 } else if (array_key_exists($key, $this->default_values) && !in_array($key, $this->export_only_defaults)) {
-                    $args[] = $this->default_values[$key];
+                    $args[] = $this->getDefaultValue($key);
                 }
 
                 if (empty($args)) {
