@@ -63,14 +63,6 @@ Eager load relations on the query.
 Filter::with(['company', 'roles'])
 ```
 
-
-### Enum
-
-
-```php
-Filter::enum()
-```
-
 ### Paginate
 Apply pagination to the query.
 It is important that this filter is applied last.
@@ -81,22 +73,35 @@ It expects the request values `$page` and `$per_page`to be present.
 Filter::paginate()
 ```
 
-
-
 ### Order
+The order filter can be configured to sort the data by specific columns or using scopes.
 
+To specify the columns to sort by, call the `only` method on the filter.
+The following example will look for `sort[id]` and `sort[created_at]` in the request.
+
+The values of `sort[<column_name>]` can be either *asc* or *desc*.
+
+```php
+Filter::order()->only(['id', 'created_at'])
+```
+
+Calling the scope method, it is possible to also configure any scopes to be used.
+It will be looking in the request for any sort keys that match the scope name.
 
 ```php
 Filter::order()
+    ->only(['id', 'created_at'])
+    ->scopes(['orderByName'])
 ```
 
-### Search
-
+Default values can also easily be added:
 
 ```php
-Filter::search()
+Filter::order()
+    ->only(['id', 'created_at'])
+    ->scopes(['orderByName'])
+    ->defaultValue(['orderByName' => 'desc'])
 ```
-
 
 ## Credits
 This package is developed and actively maintained by [Morningtrain](https://morningtrain.dk).
