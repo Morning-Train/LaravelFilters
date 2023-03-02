@@ -51,4 +51,16 @@ class FilterCollection implements FilterContract
         return $this->filters;
     }
 
+    public function isFiltering()
+    {
+        return $this->collection()->some(function($filter) {
+
+            if(method_exists($filter, 'isFiltering')) {
+                return $filter->isFiltering();
+            }
+
+            return false;
+        });
+    }
+
 }

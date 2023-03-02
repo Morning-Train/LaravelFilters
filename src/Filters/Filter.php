@@ -34,12 +34,19 @@ class Filter implements FilterContract
     protected $export_only_defaults = [];
     protected $default_values = [];
     protected $providers = [];
+    protected $is_filtering = false;
+    protected $is_extra_filter = false;
 
     public function __construct($key = null, Closure $closure = null)
     {
         if ($key !== null) {
             $this->when($key, $closure);
         }
+    }
+
+    public function isFiltering()
+    {
+        return $this->is_filtering;
     }
 
     public function when($keys, Closure $closure = null)
@@ -89,6 +96,11 @@ class Filter implements FilterContract
     protected function getFilterMethod(Closure $closure = null)
     {
         return function ($keys, Builder $query, ...$args) use ($closure) {
+
+            if($this->is_extra_filter === true) {
+                $this->is_filtering = true;
+            }
+
             if (isset($this->scope)) {
                 return $query->{$this->scope}(...$args);
             }
@@ -325,13 +337,13 @@ class Filter implements FilterContract
         if (!empty($keys)) {
             foreach ($keys as $key) {
                 $export[$key] = array_merge([
-                                                "key" => $key,
-                                                "value" => $this->getDefaultValue($key),
-                                                "label" => $this->getLabel(),
-                                                "placeholder" => $this->getPlaceholder(),
-                                                "type" => $this->getExportType(),
-                                                "required" => static::REQUIRED,
-                                            ], $this->extraExport());
+                    "key" => $key,
+                    "value" => $this->getDefaultValue($key),
+                    "label" => $this->getLabel(),
+                    "placeholder" => $this->getPlaceholder(),
+                    "type" => $this->getExportType(),
+                    "required" => static::REQUIRED,
+                ], $this->extraExport());
             }
         }
 

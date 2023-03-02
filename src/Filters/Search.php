@@ -5,6 +5,8 @@ namespace MorningTrain\Laravel\Filters\Filters;
 class Search extends Filter
 {
 
+    protected $is_extra_filter = true;
+
     public function methods($methods, $pattern = '%%s%')
     {
         // convert keys to array
